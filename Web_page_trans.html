@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Web Translator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 40px;
+            background-color: #f0f8ff;
+            color: #333;
+        }
+        .lang-selector {
+            margin-bottom: 30px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            max-width: 700px;
+        }
+        label {
+            font-weight: bold;
+            margin-top: 10px;
+            display: block;
+        }
+        input[type="text"], select {
+            padding: 8px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 100%;
+            margin: 5px 0 15px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .translated-content {
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            line-height: 1.6;
+            margin-top: 20px;
+        }
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="lang-selector">
+    <form method="POST">
+        <label for="url">🔗 Website URL:</label>
+        <input type="text" id="url" name="url" placeholder="https://example.com" value="{{ url }}">
+
+        <label for="predefined_app"> Or select a Web App:</label>
+        <select name="predefined_app" id="predefined_app">
+            <option value="">-- Select a Web App --</option>
+            {% for name, link in predefined_apps %}
+            <option value="{{ link }}" {% if link == url %}selected{% endif %}>
+                {{ name }}
+            </option>
+            {% endfor %}
+        </select>
+
+        <label for="language">Choose Language:</label>
+        <select name="language" id="language">
+            {% for code, name in languages %}
+            <option value="{{ code }}" {% if code == selected_language %}selected{% endif %}>
+                {{ name }}
+            </option>
+            {% endfor %}
+        </select>
+
+        <button type="submit">Translate</button>
+    </form>
+</div>
+
+{% if error %}
+    <p class="error">{{ error }}</p>
+{% endif %}
+
+{% if translated_html %}
+    <div class="translated-content">
+        <h3> Translated Content:</h3>
+        {{ translated_html | safe }}
+    </div>
+{% endif %}
+
+</body>
+</html>
